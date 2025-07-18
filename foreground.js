@@ -36,21 +36,44 @@ class ObservableSet {
     }
 }
 
-function elementContainsCompanyName(element, word) {
-    const text = element.innerText || element.textContent || "";
-    return text.toLowerCase().includes(word.toLowerCase());
+function elementContainsCompanyName(element) {
+
+    return new Promise((resolve) => {
+        const text = element.innerText || element.textContent || "";
+
+        if (text == ""){
+            resolve(false);
+            return;
+        }
+
+        chrome.storage.sync.get(['blocklist'], (result) => {
+            const blocklist = result.blocklist || [];
+    
+            for (let word of blocklist) {
+    
+                if (word && text.toLowerCase().includes(word.toLowerCase())) {
+                    resolve(true);
+                    return;
+                }
+            }
+
+            resolve (false);
+        });
+
+    }); 
 }
 
 const targetElement = ".artdeco-entity-lockup__subtitle";
 
-const targetWord = ".ai"
 
 const elementSet = new ObservableSet((element => {
-    if (elementContainsCompanyName(element, targetWord)){
-        console.log("Element contains the word");
-        elementSet.delete(element);
-        element.remove();
-    }
+    (async() => {
+        const contains = await elementContainsCompanyName(element);
+        if (contains) {
+            elementSet.delete(element);
+            element.remove();
+        }
+    })();
 }));
 
 const observer = new MutationObserver((mutations, observerInstance) =>{
@@ -65,8 +88,6 @@ const observer = new MutationObserver((mutations, observerInstance) =>{
         }
     }
 });
-
-
 
 observer.observe(document.body, {
     childList: true,
