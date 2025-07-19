@@ -1,5 +1,4 @@
 <div align="center">
-    <img src="https://raw.githubusercontent.com/SimGus/chrome-addon-v3-starter/master/logo/logo-128.png"/>
     <h1>LinkedIn Job Search Blocker</h1>
     <h3>An easy way to hide unwanted LinkedIn job postings.</h3>
 </div>
