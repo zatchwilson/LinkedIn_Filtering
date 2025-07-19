@@ -1,3 +1,12 @@
+var input = document.getElementById("blocklist-input")
+
+input.addEventListener("keypress", function(event){
+    if(event.key === "Enter") {
+        event.preventDefault();
+        document.getElementById("add-block").click();
+    }
+});
+
 //Load blocklist from chrome storage 
 document.addEventListener('DOMContentLoaded', () => {
     chrome.storage.sync.get(['blocklist'], (result) => {
